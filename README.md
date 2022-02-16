@@ -6,6 +6,7 @@ https://marcyoung.us/post/plaato_keg_esphome/
 
 TODO:
 
+* Figure out how pct2075 works for temperature
 * Figure out how the water sensor pins work
 * Figure out how the magnetic reset works (and give it a purpose)
 * Redo this in something like FreeRTOS where I can compile it on the fly for others who don't to use ESPHome
