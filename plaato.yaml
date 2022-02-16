@@ -1,0 +1,78 @@
+esphome:
+  name: plaato
+  platform: ESP32
+  board: nodemcu-32s
+
+#web_server:
+#  port: 80
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  domain: !secret wifi_domain
+
+logger:
+
+api:
+  password: !secret api_password
+
+ota:
+  password: !secret ota_password
+
+# This is the 3rd LED (closest to the plug)
+# https://esphome.io/components/status_led.html
+status_led:
+    pin: GPIO27
+
+output:
+  - platform: ledc
+    pin: GPIO25
+    id: led1
+    inverted: True
+  - platform: ledc
+    pin: GPIO26
+    id: led2
+    inverted: True
+
+light:
+  - platform: monochromatic
+    output: led1
+    name: "LED1"
+    restore_mode: ALWAYS_ON
+  - platform: monochromatic
+    output: led2
+    name: "LED2"
+
+http_request:
+  useragent: esphome/device
+  timeout: 60s
+  
+sensor:
+  - platform: hx711
+    name: "HX711 Value"
+    dout_pin: 17
+    clk_pin: 16
+    gain: 128
+    update_interval: 60s
+    filters:
+      - multiply: -1.0
+      - offset: -24255 # Probably want to calibrate this yourself
+      - calibrate_linear:
+          - 49712 -> 2.5 # Probably want to calibrate this yourself
+          - 203270 -> 10 # Probably want to calibrate this yourself
+    unit_of_measurement: lb
+    on_value:
+      # Turn on the 2nd LED when its submitting data
+      - lambda: |-
+          id(led2).turn_on();
+      - http_request.post:
+          url: !secret plaato_keg_hook_url
+          headers:
+            Content-Type: application/json
+          # {"weight": "{value}"}
+          json: |-
+            root["weight"] = x;
+          verify_ssl: false # ESPHome ssl doesnt support strict checks
+      # Turn off the 2nd LED when its done submitting data
+      - lambda: |-
+          id(led2).turn_off();
