@@ -43,6 +43,14 @@ light:
     output: led2
     name: "LED2"
 
+binary_sensor:
+  - platform: gpio
+    id: magnet_sensor
+    name: "Magnetic Sensor"
+    pin:
+      number: GPIO34
+      inverted: True
+
 http_request:
   useragent: esphome/device
   timeout: 60s
