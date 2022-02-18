@@ -33,6 +33,14 @@ output:
     pin: GPIO26
     id: led2
     inverted: True
+  - platform: gpio
+    pin: GPIO32
+    id: water_sensor_activation
+
+switch:
+  - platform: output
+    name: "Water Activation"
+    output: 'water_sensor_activation'
 
 light:
   - platform: monochromatic
@@ -49,6 +57,12 @@ binary_sensor:
     name: "Magnetic Sensor"
     pin:
       number: GPIO34
+      inverted: True
+  - platform: gpio
+    id: water_sensor
+    name: "Water Sensor"
+    pin:
+      number: GPIO35
       inverted: True
 
 http_request:
