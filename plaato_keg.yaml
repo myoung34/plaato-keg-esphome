@@ -1,5 +1,5 @@
 esphome:
-  name: plaato
+  name: plaato_keg
   platform: ESP32
   board: nodemcu-32s
 
@@ -27,40 +27,40 @@ status_led:
 output:
   - platform: ledc
     pin: GPIO25
-    id: led1
+    id: plaato_keg_led1
     inverted: True
   - platform: ledc
     pin: GPIO26
-    id: led2
+    id: plaato_keg_led2
     inverted: True
   - platform: gpio
     pin: GPIO32
-    id: water_sensor_activation
+    id: plaato_keg_water_sensor_activation
 
 switch:
   - platform: output
-    name: "Water Activation"
-    output: 'water_sensor_activation'
+    name: "Plaato Keg Water Activation"
+    output: 'plaato_keg_water_sensor_activation'
 
 light:
   - platform: monochromatic
-    output: led1
-    name: "LED1"
+    output: plaato_keg_led1
+    name: "Plaato Keg LED1"
     restore_mode: ALWAYS_ON
   - platform: monochromatic
-    output: led2
-    name: "LED2"
+    output: plaato_keg_led2
+    name: "Plaato Keg LED2"
 
 binary_sensor:
   - platform: gpio
-    id: magnet_sensor
-    name: "Magnetic Sensor"
+    id: plaato_keg_magnet_sensor
+    name: "Plaato Keg Magnetic Sensor"
     pin:
       number: GPIO34
       inverted: True
   - platform: gpio
-    id: water_sensor
-    name: "Water Sensor"
+    id: plaato_keg_water_sensor
+    name: "Plaato Keg Water Sensor"
     pin:
       number: GPIO35
       inverted: True
@@ -71,7 +71,7 @@ http_request:
   
 sensor:
   - platform: hx711
-    name: "HX711 Value"
+    name: "Plaato Keg HX711 Value"
     dout_pin: 17
     clk_pin: 16
     gain: 128
@@ -86,7 +86,7 @@ sensor:
     on_value:
       # Turn on the 2nd LED when its submitting data
       - lambda: |-
-          id(led2).turn_on();
+          id(plaato_keg_led2).turn_on();
       - http_request.post:
           url: !secret plaato_keg_hook_url
           headers:
@@ -97,4 +97,4 @@ sensor:
           verify_ssl: false # ESPHome ssl doesnt support strict checks
       # Turn off the 2nd LED when its done submitting data
       - lambda: |-
-          id(led2).turn_off();
+          id(plaato_keg_led2).turn_off();
