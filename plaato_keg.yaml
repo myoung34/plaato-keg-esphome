@@ -13,8 +13,9 @@ wifi:
 
 logger:
 
-api:
-  password: !secret api_password
+api:  
+  encryption:
+    key: !secret plaato_keg_key
 
 ota:
   password: !secret ota_password
