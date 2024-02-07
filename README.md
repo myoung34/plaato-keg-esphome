@@ -6,11 +6,7 @@ https://marcyoung.us/post/plaato_keg_esphome/
 
 TODO:
 
-* Figure out how pct2075 works for temperature
-* Redo this in something like FreeRTOS where I can compile it on the fly for others who don't to use ESPHome
-* Distribute binaries
+* Turn this into an actual custom component
 * Find an easy way to "zero" a keg on the fly
-* See if we can use [blynk-server](https://github.com/blynkkk/blynk-server) and DNS hijacking to distribute OTA flashing without doing any hardware work.
-
 
 The yaml is [here](plaato.yaml)
