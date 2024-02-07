@@ -3,8 +3,17 @@ esphome:
   platform: ESP32
   board: nodemcu-32s
 
-#web_server:
-#  port: 80
+  includes:
+    - keg_sensor.h
+
+  libraries:
+    - SPI
+    - Wire
+    - adafruit/Adafruit BusIO
+    - adafruit/Adafruit PCT2075
+
+web_server:
+  port: 80
 
 wifi:
   ssid: !secret wifi_ssid
@@ -99,3 +108,13 @@ sensor:
       # Turn off the 2nd LED when its done submitting data
       - lambda: |-
           id(plaato_keg_led2).turn_off();
+  - platform: custom
+    lambda: |-
+      auto sensor = new KegSensor();
+      App.register_component(sensor);
+      return {sensor->kegTemp};
+    sensors:
+      - name: Keg Temperature
+        filters:
+          - lambda: return x * (9.0/5.0) + 32.0;
+        unit_of_measurement: "°F"
